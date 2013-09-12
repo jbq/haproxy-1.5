@@ -1,0 +1,2 @@
+version=3
+opts="uversionmangle=s/-(dev\d+)/~$1/" http://haproxy.1wt.eu/index.html .*/haproxy-(1\.5-dev\d+)\.(?:tgz|tbz2|tar\.(?:gz|bz2|xz))

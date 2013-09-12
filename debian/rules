@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+MAKEARGS=DESTDIR=debian/haproxy \
+	 PREFIX=/usr \
+	 IGNOREGIT=true \
+	 MANDIR=/usr/share/man \
+	 DOCDIR=/usr/share/doc/haproxy \
+	 USE_PCRE=1 PCREDIR= \
+	 USE_OPENSSL=1 \
+	 USE_ZLIB=1
+
+ifeq ($(shell dpkg-architecture -qDEB_HOST_ARCH_OS),linux)
+	MAKEARGS+= TARGET=linux2628
+else
+	MAKEARGS+= TARGET=generic
+endif
+ifeq ($(shell dpkg-architecture -qDEB_HOST_ARCH_CPU),i386)
+	MAKEARGS+= USE_REGPARM=1
+endif
+
+MAKEARGS += CFLAGS="$(shell dpkg-buildflags --get CFLAGS) $(shell dpkg-buildflags --get CPPFLAGS)"
+MAKEARGS += LDFLAGS="$(shell dpkg-buildflags --get LDFLAGS)"
+
+%:
+	dh $@ --with systemd
+
+override_dh_auto_configure:
+
+override_dh_auto_build:
+	make $(MAKEARGS)
+	make -C contrib/systemd $(MAKEARGS)
+	dh_auto_build -Dcontrib/halog
+
+override_dh_auto_clean:
+	make -C contrib/systemd clean
+	dh_auto_clean
+	dh_auto_clean -Dcontrib/halog
+
+override_dh_auto_install:
+	make $(MAKEARGS) install
+	install -m 0644 -D debian/rsyslog.conf debian/haproxy/etc/rsyslog.d/haproxy.conf
+	install -m 0644 -D debian/logrotate.conf debian/haproxy/etc/logrotate.d/haproxy
+
+override_dh_installdocs:
+	dh_installdocs
+	rm -f debian/haproxy/usr/share/doc/haproxy/haproxy-fr.txt
+	rm -f debian/haproxy/usr/share/doc/haproxy/haproxy-en.txt
+
+override_dh_installexamples:
+	dh_installexamples -X build.cfg
