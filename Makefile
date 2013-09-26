@@ -621,7 +621,7 @@ all:
 	@echo
 	@exit 1
 else
-all: haproxy haproxy-systemd-wrapper
+all: haproxy
 endif
 
 OBJS = src/haproxy.o src/sessionhash.o src/base64.o src/protocol.o \
