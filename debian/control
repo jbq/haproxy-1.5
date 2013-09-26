@@ -6,8 +6,7 @@ Uploaders: Apollon Oikonomopoulos <apoikos@gmail.com>,
            Prach Pongpanich <prachpub@gmail.com>,
            Vincent Bernat <bernat@debian.org>
 Standards-Version: 3.9.4
-Build-Depends: debhelper (>= 7.0.50~), libpcre3-dev, libssl-dev,
-               dh-systemd (>= 1.5)
+Build-Depends: debhelper (>= 7.0.50~), libpcre3-dev, libssl-dev
 Homepage: http://haproxy.1wt.eu/
 Vcs-Git: git://anonscm.debian.org/pkg-haproxy/haproxy.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-haproxy/haproxy.git
