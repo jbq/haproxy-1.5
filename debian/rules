@@ -24,17 +24,15 @@ MAKEARGS += CFLAGS="$(shell dpkg-buildflags --get CFLAGS) $(shell dpkg-buildflag
 MAKEARGS += LDFLAGS="$(shell dpkg-buildflags --get LDFLAGS)"
 
 %:
-	dh $@ --with systemd
+	dh $@
 
 override_dh_auto_configure:
 
 override_dh_auto_build:
 	make $(MAKEARGS)
-	make -C contrib/systemd $(MAKEARGS)
 	dh_auto_build -Dcontrib/halog
 
 override_dh_auto_clean:
-	make -C contrib/systemd clean
 	dh_auto_clean
 	dh_auto_clean -Dcontrib/halog
 
